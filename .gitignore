@@ -1,0 +1,9 @@
+target/
+Dockerfile.dev
+.env.local
+.env
+.DS_Store
+*.log
+.vscode/
+.idea/
+Cargo.lock
