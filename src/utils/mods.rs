@@ -1,13 +1,10 @@
-use serde_json;
-use serde::de::{DeserializeSeed, IntoDeserializer};
 use refx_pp::model::mode::GameMode;
+use serde::de::{DeserializeSeed, IntoDeserializer};
+use serde_json;
 
 use rosu_mods::{
-    GameMode as RosuGameMode,
-    GameMods as GameModsLazer,
-    GameModsIntermode,
+    serde::GameModSeed, GameMode as RosuGameMode, GameMods as GameModsLazer, GameModsIntermode,
     GameModsLegacy,
-    serde::GameModSeed,
 };
 
 #[derive(Clone)]
@@ -52,9 +49,14 @@ impl GameMods {
 
             for value in values {
                 let res = if let Some(acronym) = value.as_str() {
-                    seed.deserialize(serde_json::Value::String(acronym.to_string()).into_deserializer())
+                    seed.deserialize(
+                        serde_json::Value::String(acronym.to_string()).into_deserializer(),
+                    )
                 } else if let Some(bits) = value.as_u64() {
-                    seed.deserialize(serde_json::Value::Number(serde_json::Number::from(bits)).into_deserializer())
+                    seed.deserialize(
+                        serde_json::Value::Number(serde_json::Number::from(bits))
+                            .into_deserializer(),
+                    )
                 } else {
                     seed.deserialize(value.into_deserializer())
                 };
@@ -70,7 +72,8 @@ impl GameMods {
             let value = serde_json::from_str::<serde_json::Value>(json_str)
                 .map_err(|e| format!("invalid JSON: {e}"))?;
 
-            let m = seed.deserialize(value.into_deserializer())
+            let m = seed
+                .deserialize(value.into_deserializer())
                 .map_err(|e| format!("failed to deserialize mod: {e}"))?;
 
             let mut mods = GameModsLazer::new();

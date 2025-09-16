@@ -1,10 +1,6 @@
 use anyhow::Result;
 
-use omajinai::{
-    config::Config,
-    context::Context,
-    routes::create_routes,
-};
+use omajinai::{config::Config, context::Context, routes::create_routes};
 
 use std::sync::Arc;
 use tracing::info;
@@ -23,17 +19,17 @@ async fn main() -> Result<()> {
     let routes = create_routes(context.clone());
 
     let addr = ([0, 0, 0, 0], context.config.port);
-    info!("Performance service starting on http://{}", format!("{}:{}", addr.0.map(|x| x.to_string()).join("."), addr.1));
+    info!(
+        "Performance service starting on http://{}",
+        format!("{}:{}", addr.0.map(|x| x.to_string()).join("."), addr.1)
+    );
 
     let shutdown = async {
-        tokio::signal::ctrl_c()
-            .await
-            .expect(""); // what even happened
+        tokio::signal::ctrl_c().await.expect(""); // what even happened
         info!("Shutting down...");
     };
-    
-    let (_addr, server) = warp::serve(routes)
-        .bind_with_graceful_shutdown(addr, shutdown);
+
+    let (_addr, server) = warp::serve(routes).bind_with_graceful_shutdown(addr, shutdown);
 
     server.await;
 

@@ -27,11 +27,11 @@ impl Default for Config {
 impl Config {
     pub fn from_env() -> Result<Self> {
         let mut config = Config::default();
-        
+
         if let Ok(port) = std::env::var("PORT") {
             config.port = port.parse()?;
         }
-        
+
         if let Ok(beatmap_url) = std::env::var("BEATMAPS_SERVICE_URL") {
             config.beatmaps_service_url = beatmap_url;
         }
@@ -39,15 +39,15 @@ impl Config {
         if let Ok(beatmap_path) = std::env::var("BEATMAPS_PATH") {
             config.beatmaps_path = beatmap_path
         }
-        
+
         if let Ok(log_level) = std::env::var("RUST_LOG") {
             config.log_level = log_level;
         }
-        
+
         if let Ok(cache_size) = std::env::var("CACHE_SIZE") {
             config.cache_size = cache_size.parse()?;
         }
-        
+
         if let Ok(timeout) = std::env::var("REQUEST_TIMEOUT_SECONDS") {
             config.request_timeout_seconds = timeout.parse()?;
         }

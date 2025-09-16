@@ -30,7 +30,7 @@ impl<T> ApiResponse<T> {
             error: None,
         }
     }
-    
+
     pub fn error(message: String) -> Self {
         Self {
             success: false,
@@ -45,11 +45,4 @@ pub struct HealthResponse {
     pub status: String,
     pub version: String,
     pub uptime_seconds: u64,
-}
-
-#[derive(Debug, Serialize)]
-pub struct BulkCalculateResponse {
-    pub results: Vec<Result<PerformanceResult, String>>,
-    pub processed: usize,
-    pub successful: usize,
 }

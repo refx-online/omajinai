@@ -23,16 +23,11 @@ impl CalculateRequest {
         if self.mode > 3 {
             return Err(crate::error::AppError::InvalidGameMode(self.mode));
         }
-        
+
         if self.accuracy < 0.0 || self.accuracy > 100.0 {
             return Err(crate::error::AppError::InvalidAccuracy(self.accuracy));
         }
-        
+
         Ok(())
     }
-}
-
-#[derive(Debug, Deserialize)]
-pub struct BulkCalculateRequest {
-    pub calculations: Vec<CalculateRequest>,
 }
