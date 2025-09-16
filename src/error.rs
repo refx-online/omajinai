@@ -1,6 +1,6 @@
 use serde::Serialize;
 use thiserror::Error;
-use warp::{http::StatusCode, Reply};
+use warp::{Reply, http::StatusCode};
 
 #[derive(Error, Debug)]
 pub enum AppError {

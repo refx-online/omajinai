@@ -3,8 +3,8 @@ use serde::de::{DeserializeSeed, IntoDeserializer};
 use serde_json;
 
 use rosu_mods::{
-    serde::GameModSeed, GameMode as RosuGameMode, GameMods as GameModsLazer, GameModsIntermode,
-    GameModsLegacy,
+    GameMode as RosuGameMode, GameMods as GameModsLazer, GameModsIntermode, GameModsLegacy,
+    serde::GameModSeed,
 };
 
 #[derive(Clone)]

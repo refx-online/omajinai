@@ -9,14 +9,14 @@ repos:
     hooks:
       - id: cargo-fmt
         name: cargo fmt
-        entry: cargo fmt --all
+        entry: cargo +nightly fmt --all -- --emit=files
         language: system
         types: [rust]
         pass_filenames: false
 
       - id: cargo-clippy
         name: cargo clippy
-        entry: cargo clippy --all-targets --all-features -- -D warnings
+        entry: cargo +nightly clippy --all-targets --all-features -- -D warnings
         language: system
         types: [rust]
         pass_filenames: false

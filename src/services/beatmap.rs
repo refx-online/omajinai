@@ -67,13 +67,13 @@ impl BeatmapService {
             Ok(d) => {
                 info!("beatmap {} loaded from disk", beatmap_id);
                 d
-            }
+            },
             Err(_) => {
                 let f = self.fetch_beatmap_osu_file(beatmap_id).await?;
                 write(&beatmap_path, &f).await.ok();
                 info!("beatmap {} fetched", beatmap_id);
                 f
-            }
+            },
         };
 
         let beatmap = Beatmap::from_bytes(&bytes)

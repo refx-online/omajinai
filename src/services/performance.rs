@@ -2,7 +2,7 @@ use crate::{
     error::AppError,
     models::{requests::CalculateRequest, responses::PerformanceResult},
     services::beatmap::BeatmapService,
-    utils::mods::{parse_mods, GameMods},
+    utils::mods::{GameMods, parse_mods},
 };
 use refx_pp::model::mode::GameMode;
 
@@ -70,7 +70,7 @@ impl PerformanceService {
                     } else {
                         calculator.mods(legacy_mods.bits())
                     }
-                }
+                },
                 GameMods::Intermode(intermode_mods) => calculator.mods(intermode_mods),
                 GameMods::Lazer(lazer_mods) => calculator.mods(lazer_mods),
             };

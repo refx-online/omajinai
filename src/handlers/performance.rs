@@ -21,10 +21,10 @@ pub async fn calculate_handler(
                 warp::reply::with_status(warp::reply::json(&response), warp::http::StatusCode::OK)
                     .into_response(),
             )
-        }
+        },
         Err(err) => {
             error!("performance calculation failed: {}", err);
             Ok(err.to_response().into_response())
-        }
+        },
     }
 }
