@@ -16,7 +16,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 uuid = { version = "1.0", features = ["v4"] }
 config = "0.13"
 once_cell = "1.19"
-refx-pp = { git = "https://github.com/refx-online/refx-pp-rs", rev = "29e4b3e8a6fbbf22b669c5ed0e52dc115321db3c", features = ["sync"] }
+refx-pp = { git = "https://github.com/refx-online/refx-pp-rs", rev = "834b22b0c4d03ebae6b142844ecdf74b3b277a43", features = ["sync"] }
 rosu-mods = { version = "0.3.0", default-features = false, features = ["serde"] }
 
 [dev-dependencies]

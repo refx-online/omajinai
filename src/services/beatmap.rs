@@ -3,8 +3,14 @@ use crate::{config::Config, error::AppError};
 use anyhow::Result;
 use refx_pp::Beatmap;
 
-use std::collections::HashMap;
-use tokio::sync::RwLock;
+use std::{
+    collections::HashMap, 
+    path::Path
+};
+use tokio::{
+    sync::RwLock, 
+    fs::read, fs::write
+};
 use tracing::{info, warn};
 
 pub struct BeatmapService {
@@ -60,10 +66,24 @@ impl BeatmapService {
                 return Ok(beatmap.clone());
             }
         }
-        
-        let bytes = self.fetch_beatmap_osu_file(beatmap_id).await?;
+
+        let beatmap_path = Path::new(&self.config.beatmaps_path).join(format!("{beatmap_id}.osu"));
+
+        let bytes = match read(&beatmap_path).await {
+            Ok(d) => {
+                info!("beatmap {} loaded from disk", beatmap_id);
+                d
+            }
+            Err(_) => {
+                let f = self.fetch_beatmap_osu_file(beatmap_id).await?;
+                write(&beatmap_path, &f).await.ok();
+                info!("beatmap {} fetched", beatmap_id);
+                f
+            }
+        };
+
         let beatmap = Beatmap::from_bytes(&bytes)
-            .map_err(|e| AppError::Internal(format!("failed to parse beatmap: {}", e)))?;
+            .map_err(|e| AppError::Internal(format!("failed to parse beatmap: {e}")))?;
 
         {
             let mut cache = self.cache.write().await;
