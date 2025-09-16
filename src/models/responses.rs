@@ -4,6 +4,7 @@ use serde::Serialize;
 pub struct PerformanceResult {
     pub pp: f64,
     pub stars: f64,
+    pub max_combo: u32,
 }
 
 impl PerformanceResult {
@@ -11,6 +12,7 @@ impl PerformanceResult {
         Self {
             pp: attributes.pp(),
             stars: attributes.stars(),
+            max_combo: attributes.max_combo(),
         }
     }
 }
