@@ -5,7 +5,7 @@ use crate::{
 
 use anyhow::Result;
 use std::sync::Arc;
-use std::time::Duration;
+use std::time::{Duration, SystemTime};
 
 #[derive(Clone)]
 pub struct Context {
@@ -13,6 +13,7 @@ pub struct Context {
     pub http_client: reqwest::Client,
     pub beatmap_service: Arc<BeatmapService>,
     pub performance_service: Arc<PerformanceService>,
+    pub start_time: SystemTime,
 }
 
 impl Context {
@@ -30,6 +31,7 @@ impl Context {
             http_client,
             beatmap_service,
             performance_service,
+            start_time: SystemTime::now(),
         })
     }
 }
