@@ -8,7 +8,7 @@ pub struct CalculateRequest {
     pub max_combo: Option<u32>,
     pub accuracy: f64,
     pub miss_count: Option<u32>,
-    // pub passed_objects: Option<u32>,
+    pub passed_objects: Option<u32>,
     pub lazer: Option<bool>,
 }
 

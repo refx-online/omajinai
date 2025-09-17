@@ -55,11 +55,10 @@ impl PerformanceService {
         if let Some(misses) = request.miss_count {
             calculator = calculator.misses(misses);
         }
-        /*
+
         if let Some(passed) = request.passed_objects {
             calculator = calculator.passed_objects(passed);
         }
-        */
 
         if let Some(mods_str) = &request.mods {
             let mods = parse_mods(mods_str, mode).unwrap_or_default();

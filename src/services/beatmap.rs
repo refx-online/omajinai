@@ -69,6 +69,8 @@ impl BeatmapService {
                 d
             },
             Err(_) => {
+                // might never get called since bancho handled this BUUUT
+                // theres a chance of this happening
                 let f = self.fetch_beatmap_osu_file(beatmap_id).await?;
                 write(&beatmap_path, &f).await.ok();
                 info!("beatmap {} fetched", beatmap_id);

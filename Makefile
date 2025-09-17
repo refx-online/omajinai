@@ -12,3 +12,6 @@ run-bg:
 
 build:
 	docker build -t omajinai:latest .
+
+fmt:
+	cargo +nightly fmt --all -- --emit=files
