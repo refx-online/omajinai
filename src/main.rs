@@ -1,6 +1,8 @@
 use anyhow::Result;
 
-use omajinai::{config::Config, context::Context, routes::create_routes};
+use omajinai::{
+    config::Config, context::Context, routes::create_routes, services::recalculate::PubSubHandler,
+};
 
 use std::sync::Arc;
 use tracing::info;
@@ -15,6 +17,11 @@ async fn main() -> Result<()> {
     info!("Loaded configuration: {:?}", config);
 
     let context = Arc::new(Context::new(config).await?);
+
+    let pubsub = PubSubHandler::new(context.clone());
+    tokio::spawn(async move {
+        let _ = pubsub.start_listener().await;
+    });
 
     let routes = create_routes(context.clone());
 
