@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
         info!("Shutting down...");
     };
 
-    let (_addr, server) = warp::serve(routes).bind_with_graceful_shutdown(addr, shutdown);
+    let (_, server) = warp::serve(routes).bind_with_graceful_shutdown(addr, shutdown);
 
     server.await;
 

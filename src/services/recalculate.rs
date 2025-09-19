@@ -15,7 +15,7 @@ use redis::AsyncCommands;
 use refx_pp::model::mode::GameMode;
 use sqlx::Row;
 use std::sync::Arc;
-use tracing::{error, info, warn};
+use tracing::{debug, error, info, warn};
 
 const UNRESTRICTED: i32 = 1 << 0;
 
@@ -177,7 +177,7 @@ impl PubSubHandler {
             .execute(&self.ctx.database)
             .await?;
 
-        info!(
+        debug!(
             "Score {} updated: {:.3}pp -> {:.3}pp",
             score.id, score.pp, new_pp
         );
