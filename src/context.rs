@@ -4,8 +4,8 @@ use crate::{
 };
 
 use redis::{
-    aio::{MultiplexedConnection, PubSub}, 
-    Client as RedisClient
+    Client as RedisClient,
+    aio::{MultiplexedConnection, PubSub},
 };
 use sqlx::{MySqlPool, mysql::MySqlPoolOptions};
 

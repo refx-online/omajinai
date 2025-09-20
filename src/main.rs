@@ -4,9 +4,9 @@ use omajinai::{
     config::Config, context::Context, routes::create_routes, services::recalculate::PubSubHandler,
 };
 
+use redis::AsyncCommands;
 use std::sync::Arc;
 use tracing::info;
-use redis::AsyncCommands;
 
 #[tokio::main]
 async fn main() -> Result<()> {
