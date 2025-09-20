@@ -45,7 +45,7 @@ impl PubSubHandler {
     }
 
     pub async fn start_listener(&self) -> Result<()> {
-        let mut pubsub = self.ctx.redis.get_async_pubsub().await?;
+        let mut pubsub = self.ctx.redis_pubsub.lock().await;
 
         pubsub.subscribe("omajinai:recalculate").await?;
         info!("Subscribed to omajinai:recalculate channel");
@@ -71,7 +71,7 @@ impl PubSubHandler {
             msg.user_id
         );
 
-        let mut conn = self.ctx.redis.get_multiplexed_async_connection().await?;
+        let mut conn = self.ctx.redis_conn.lock().await;
 
         for mode in [0, 1, 2, 3, 4, 5, 6, 8, 12, 16] {
             if let Err(e) = self.recalculate_mode(mode).await {
@@ -298,7 +298,7 @@ impl PubSubHandler {
             return Ok(());
         }
 
-        let mut redis = self.ctx.redis.get_multiplexed_async_connection().await?;
+        let mut redis = self.ctx.redis_conn.lock().await;
         let pp_int = pp as i32;
 
         let _: () = redis

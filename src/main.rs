@@ -6,6 +6,7 @@ use omajinai::{
 
 use std::sync::Arc;
 use tracing::info;
+use redis::AsyncCommands;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -23,6 +24,12 @@ async fn main() -> Result<()> {
         let _ = pubsub.start_listener().await;
     });
 
+    // Tell bancho omajinai is up
+    {
+        let mut conn = context.redis_conn.lock().await;
+        let _: () = conn.publish("refx:status", "0").await?;
+    }
+
     let routes = create_routes(context.clone());
 
     let addr = ([0, 0, 0, 0], context.config.port);
@@ -39,6 +46,12 @@ async fn main() -> Result<()> {
     let (_, server) = warp::serve(routes).bind_with_graceful_shutdown(addr, shutdown);
 
     server.await;
+
+    // Tell bancho omajinai is dead
+    {
+        let mut conn = context.redis_conn.lock().await;
+        let _: () = conn.publish("refx:status", "1").await?;
+    }
 
     Ok(())
 }
