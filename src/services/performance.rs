@@ -29,7 +29,7 @@ impl PerformanceService {
             beatmap_service.get_beatmap(beatmap_id).await?
         } else {
             return Err(AppError::BadRequest(
-                "beatmap_id must be provided".to_string(),
+                "Beatmap_id must be provided".to_string(),
             ));
         };
 
@@ -44,7 +44,7 @@ impl PerformanceService {
         let mut calculator = beatmap
             .performance()
             .try_mode(mode)
-            .map_err(|_| AppError::Internal("failed to set game mode".to_string()))?
+            .map_err(|_| AppError::Internal("Failed to set game mode".to_string()))?
             .lazer(request.lazer.unwrap_or(false))
             .accuracy(request.accuracy);
 
@@ -79,7 +79,7 @@ impl PerformanceService {
         let perf_result = PerformanceResult::from_attributes(result);
 
         info!(
-            "calculated performance: {:.2}pp, {:.2}*",
+            "Calculated performance: {:.2}pp, {:.2}*",
             perf_result.pp, perf_result.stars
         );
 

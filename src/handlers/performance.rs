@@ -23,7 +23,7 @@ pub async fn calculate_handler(
             )
         },
         Err(err) => {
-            error!("performance calculation failed: {}", err);
+            error!("Performance calculation failed: {}", err);
             Ok(err.to_response().into_response())
         },
     }

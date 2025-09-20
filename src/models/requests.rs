@@ -16,7 +16,7 @@ impl CalculateRequest {
     pub fn validate(&self) -> Result<(), crate::error::AppError> {
         if self.beatmap_id.is_none() {
             return Err(crate::error::AppError::BadRequest(
-                "beatmap_id must be provided".to_string(),
+                "Beatmap_id must be provided".to_string(),
             ));
         }
 
