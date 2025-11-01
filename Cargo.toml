@@ -1,6 +1,6 @@
 [package]
 name = "omajinai"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 
 [dependencies]
@@ -16,7 +16,7 @@ thiserror = "1.0"
 futures = "0.3"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", default-features = false, features = ["env-filter", "fmt"] }
-refx-pp = { git = "https://github.com/refx-online/refx-pp-rs", rev = "834b22b0c4d03ebae6b142844ecdf74b3b277a43", features = ["sync"] }
+refx-pp = { git = "https://github.com/refx-online/refx-pp-rs", rev = "fcc0f2f519cf106c4e63b2d76f3b71bbf756559f", features = ["sync"] }
 rosu-mods = { version = "0.3.0", default-features = false, features = ["serde"] }
 
 [dev-dependencies]

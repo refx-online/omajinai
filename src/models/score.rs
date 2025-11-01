@@ -21,6 +21,8 @@ pub struct Score {
 
     pub mods_json: Option<sqlx::types::Json<serde_json::Value>>,
     pub lazer: bool,
+
+    pub score: i32,
 }
 
 #[derive(Debug, sqlx::FromRow)]

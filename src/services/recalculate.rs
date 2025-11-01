@@ -73,7 +73,7 @@ impl PubSubHandler {
 
         let mut conn = self.ctx.redis_conn.lock().await;
 
-        for mode in [0, 1, 2, 3, 4, 5, 6, 8, 12, 16] {
+        for mode in [0, 1, 2, 3, 4, 5, 6, 8, 12, 16, 20] {
             if let Err(e) = self.recalculate_mode(mode).await {
                 error!("Failed to recalculate mode {}: {}", mode, e);
             }
@@ -166,6 +166,10 @@ impl PubSubHandler {
             .n_katu(score.nkatu as u32)
             .lazer(score.lazer);
 
+        if !score.lazer {
+            calculator = calculator.legacy_total_score(i64::from(score.score));
+        }
+
         self.apply_mods_to_calculator(&mut calculator, score)?;
 
         let new_pp = calculator.calculate().pp();
@@ -227,6 +231,15 @@ impl PubSubHandler {
             3 => GameMode::Mania,
             _ => return Ok(()),
         };
+        let mut mods: i32 = score.mods;
+
+        const RELAX: i32 = 1 << 7;
+        // SPECIAL CASE: For refx mode, we shouldn't apply relax since
+        //               the client has 2 relaxes (relax cheat and relax mod) and the player most likely
+        //               cannot adapt to that relax nerf.
+        if score.mode == 12 || score.mode == 16 {
+            mods &= !RELAX;
+        }
 
         let mods_str = if score.lazer {
             score
@@ -235,12 +248,8 @@ impl PubSubHandler {
                 .map(|json| serde_json::to_string(&json.0).unwrap_or_default())
                 .unwrap_or_else(|| score.mods.to_string())
         } else {
-            score.mods.to_string()
+            mods.to_string()
         };
-
-        if mods_str.is_empty() {
-            return Ok(());
-        }
 
         // god save me
         match parse_mods(&mods_str, mode) {

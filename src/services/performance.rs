@@ -75,6 +75,10 @@ impl PerformanceService {
             };
         }
 
+        if let Some(legacy_score) = request.legacy_score {
+            calculator = calculator.legacy_total_score(legacy_score);
+        }
+
         let result = calculator.calculate();
         let perf_result = PerformanceResult::from_attributes(result);
 

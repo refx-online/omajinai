@@ -9,6 +9,7 @@ pub struct CalculateRequest {
     pub accuracy: f64,
     pub miss_count: Option<u32>,
     pub passed_objects: Option<u32>,
+    pub legacy_score: Option<i64>,
     pub lazer: Option<bool>,
 }
 
@@ -26,6 +27,12 @@ impl CalculateRequest {
 
         if self.accuracy < 0.0 || self.accuracy > 100.0 {
             return Err(crate::error::AppError::InvalidAccuracy(self.accuracy));
+        }
+
+        if self.legacy_score.is_some() && self.lazer.unwrap_or(false) {
+            return Err(crate::error::AppError::BadRequest(
+                "Legacy score cannot be used with lazer calculations.".to_string(),
+            ));
         }
 
         Ok(())
