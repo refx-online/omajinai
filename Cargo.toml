@@ -16,7 +16,7 @@ thiserror = "1.0"
 futures = "0.3"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", default-features = false, features = ["env-filter", "fmt"] }
-refx-pp = { git = "https://github.com/refx-online/refx-pp-rs", rev = "89ab506ca1b641be44d4d05d9a40e1229341ea5d", features = ["sync"] }
+refx-pp = { git = "https://github.com/refx-online/refx-pp-rs", rev = "4535d0f7729cb84718b7132ec7dc56763d6d8b5f", features = ["sync"] }
 rosu-mods = { version = "0.3.0", default-features = false, features = ["serde"] }
 
 [dev-dependencies]
