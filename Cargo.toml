@@ -8,15 +8,13 @@ tokio = { version = "1.0", features = ["rt-multi-thread", "net", "time", "macros
 warp = { version = "0.3", default-features = false, features = ["compression"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-sqlx = { version = "0.7", default-features = false, features = ["runtime-tokio-rustls", "mysql", "macros", "json", "time"] }
-redis = { version = "0.32.5", default-features = false, features = ["aio", "tokio-comp"] }
 reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
 anyhow = "1.0"
 thiserror = "1.0"
 futures = "0.3"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", default-features = false, features = ["env-filter", "fmt"] }
-refx-pp = { git = "https://github.com/refx-online/refx-pp-rs", rev = "4535d0f7729cb84718b7132ec7dc56763d6d8b5f", features = ["sync"] }
+refx-pp = { git = "https://github.com/refx-online/refx-pp-rs", rev = "e40c53c8b42a3528dfab15d6af774b33c37f8df2", features = ["sync"] }
 rosu-mods = { version = "0.3.0", default-features = false, features = ["serde"] }
 
 [dev-dependencies]

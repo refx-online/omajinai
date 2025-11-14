@@ -1,10 +1,9 @@
 use anyhow::Result;
 
 use omajinai::{
-    config::Config, context::Context, routes::create_routes, services::recalculate::PubSubHandler,
+    config::Config, context::Context, routes::create_routes,
 };
 
-use redis::AsyncCommands;
 use std::sync::Arc;
 use tracing::info;
 
@@ -18,17 +17,6 @@ async fn main() -> Result<()> {
     info!("Loaded configuration: {:?}", config);
 
     let context = Arc::new(Context::new(config).await?);
-
-    let pubsub = PubSubHandler::new(context.clone());
-    tokio::spawn(async move {
-        let _ = pubsub.start_listener().await;
-    });
-
-    // Tell bancho omajinai is up
-    {
-        let mut conn = context.redis_conn.lock().await;
-        let _: () = conn.publish("refx:status", "0").await?;
-    }
 
     let routes = create_routes(context.clone());
 
@@ -46,12 +34,6 @@ async fn main() -> Result<()> {
     let (_, server) = warp::serve(routes).bind_with_graceful_shutdown(addr, shutdown);
 
     server.await;
-
-    // Tell bancho omajinai is dead
-    {
-        let mut conn = context.redis_conn.lock().await;
-        let _: () = conn.publish("refx:status", "1").await?;
-    }
 
     Ok(())
 }

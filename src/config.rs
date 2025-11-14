@@ -8,8 +8,6 @@ pub struct Config {
     pub beatmaps_path: String,
     pub cache_size: usize,
     pub request_timeout_seconds: u64,
-    pub redis_dsn: String,
-    pub mysql_dsn: String,
 }
 
 impl Default for Config {
@@ -20,8 +18,6 @@ impl Default for Config {
             beatmaps_path: ".data/osu/".to_string(),
             cache_size: 1000,
             request_timeout_seconds: 30,
-            redis_dsn: "redis://localhost:6379/".to_string(),
-            mysql_dsn: "mysql://user:password@host:port/database".to_string(),
         }
     }
 }
@@ -32,14 +28,6 @@ impl Config {
 
         if let Ok(port) = std::env::var("PORT") {
             config.port = port.parse()?;
-        }
-
-        if let Ok(redis) = std::env::var("REDIS_DSN") {
-            config.redis_dsn = redis;
-        }
-
-        if let Ok(sql) = std::env::var("MYSQL_DSN") {
-            config.mysql_dsn = sql;
         }
 
         if let Ok(beatmap_url) = std::env::var("BEATMAPS_SERVICE_URL") {
