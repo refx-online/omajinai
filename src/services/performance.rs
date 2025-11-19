@@ -6,16 +6,44 @@ use crate::{
 };
 use refx_pp::model::mode::GameMode;
 
-use std::sync::Arc;
-use tracing::info;
+use std::{collections::HashMap, hash::{Hash, Hasher}, sync::Arc};
+use tokio::sync::RwLock;
+
+/// unique.
+unsafe fn hash(request: &CalculateRequest) -> u64 {
+    use std::collections::hash_map::DefaultHasher;
+    
+    let mut hasher = DefaultHasher::new();
+    
+    request.beatmap_id.hash(&mut hasher);
+    request.mode.hash(&mut hasher);
+    request.mods.hash(&mut hasher);
+    request.lazer.hash(&mut hasher);
+    
+    // hash accuracy as bits to avoid float comparison issues
+    #[allow(unnecessary_transmutes)]
+    std::mem::transmute::<f64, u64>(request.accuracy)
+        .hash(&mut hasher);
+    
+    request.max_combo.hash(&mut hasher);
+    request.miss_count.hash(&mut hasher);
+    request.passed_objects.hash(&mut hasher);
+    request.legacy_score.hash(&mut hasher);
+    
+    hasher.finish()
+}
 
 pub struct PerformanceService {
-    // TODO: caching?
+    cache: RwLock<HashMap<u64, PerformanceResult>>,
+    cache_size: usize,
 }
 
 impl PerformanceService {
-    pub async fn new(_cache_size: usize) -> Self {
-        Self {}
+    pub async fn new(cache_size: usize) -> Self {
+        Self {
+            cache: RwLock::new(HashMap::new()),
+            cache_size,
+        }
     }
 
     pub async fn calculate_performance(
@@ -24,6 +52,17 @@ impl PerformanceService {
         beatmap_service: Arc<BeatmapService>,
     ) -> Result<PerformanceResult, AppError> {
         request.validate()?;
+
+        let key = unsafe { 
+            hash(&request)
+        };
+
+        {
+            let c = self.cache.read().await;
+            if let Some(result) = c.get(&key) {
+                return Ok(result.clone());
+            }
+        }
 
         let beatmap = if let Some(beatmap_id) = request.beatmap_id {
             beatmap_service.get_beatmap(beatmap_id).await?
@@ -43,8 +82,7 @@ impl PerformanceService {
 
         let mut calculator = beatmap
             .performance()
-            .try_mode(mode)
-            .map_err(|_| AppError::Internal("Failed to set game mode".to_string()))?
+            .mode_or_ignore(mode)
             .lazer(request.lazer.unwrap_or(false))
             .accuracy(request.accuracy);
 
@@ -82,10 +120,29 @@ impl PerformanceService {
         let result = calculator.calculate();
         let perf_result = PerformanceResult::from_attributes(result);
 
-        info!(
+        println!(
             "Calculated performance: {:.2}pp, {:.2}*",
             perf_result.pp, perf_result.stars
         );
+
+        {
+            let mut cache = self.cache.write().await;
+            cache.insert(key, perf_result.clone());
+
+            // at the time when im writing this,
+            // i don't think caching is a good idea for this case
+            // since rosu-pp is already fast enough
+            if cache.len() > self.cache_size {
+                let keys_to_remove: Vec<u64> = cache
+                    .keys()
+                    .take(cache.len() - self.cache_size)
+                    .cloned()
+                    .collect();
+                for key in keys_to_remove {
+                    cache.remove(&key);
+                }
+            }
+        }
 
         Ok(perf_result)
     }

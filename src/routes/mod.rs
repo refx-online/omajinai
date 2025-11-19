@@ -17,7 +17,7 @@ pub fn create_routes(
         .and_then(health::health_handler);
 
     let calculate_route = warp::path("calculate")
-        .and(warp::get())
+        .and(warp::get()) // why didnt i use post before
         .and(warp::query::<CalculateRequest>())
         .and(context_filter.clone())
         .and_then(performance::calculate_handler);

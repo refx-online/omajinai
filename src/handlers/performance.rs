@@ -3,7 +3,6 @@ use crate::{
     models::{requests::CalculateRequest, responses::ApiResponse},
 };
 use std::{convert::Infallible, sync::Arc};
-use tracing::error;
 use warp::Reply;
 
 pub async fn calculate_handler(
@@ -23,7 +22,6 @@ pub async fn calculate_handler(
             )
         },
         Err(err) => {
-            error!("Performance calculation failed: {}", err);
             Ok(err.to_response().into_response())
         },
     }
