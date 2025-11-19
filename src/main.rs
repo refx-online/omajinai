@@ -14,8 +14,9 @@ async fn main() -> Result<()> {
 
     let addr = ([0, 0, 0, 0], context.config.port);
     println!(
-        "Performance service starting on http://{}:{}", 
-        addr.0.map(|x| x.to_string()).join("."), addr.1
+        "Performance service starting on http://{}:{}",
+        addr.0.map(|x| x.to_string()).join("."),
+        addr.1
     );
 
     let shutdown = async {
