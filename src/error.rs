@@ -25,22 +25,22 @@ impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             AppError::BeatmapNotFound(id) =>
-                write!(f, "beatmap not found: {}", id),
+                write!(f, "Beatmap not found: {}", id),
 
             AppError::InvalidGameMode(mode) =>
-                write!(f, "invalid game mode: {}", mode),
+                write!(f, "Invalid game mode: {}", mode),
 
             AppError::InvalidAccuracy(acc) =>
-                write!(f, "invalid accuracy: {}", acc),
+                write!(f, "Invalid accuracy: {}", acc),
 
             AppError::ExternalService(msg) =>
-                write!(f, "external service error: {}", msg),
+                write!(f, "External service error: {}", msg),
 
             AppError::Internal(msg) =>
-                write!(f, "internal error: {}", msg),
+                write!(f, "Internal error: {}", msg),
 
             AppError::BadRequest(msg) =>
-                write!(f, "bad request: {}", msg),
+                write!(f, "Bad request: {}", msg),
         }
     }
 }
