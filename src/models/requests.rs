@@ -29,7 +29,7 @@ impl CalculateRequest {
             return Err(crate::error::AppError::InvalidAccuracy(self.accuracy));
         }
 
-        if self.legacy_score.is_some() && self.lazer.unwrap_or(false) {
+        if self.legacy_score.is_some() && self.lazer.is_some() {
             return Err(crate::error::AppError::BadRequest(
                 "Legacy score cannot be used with lazer calculations.".to_string(),
             ));
