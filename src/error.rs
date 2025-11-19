@@ -1,6 +1,6 @@
 use serde::Serialize;
+use std::{error::Error, fmt};
 use warp::{Reply, http::StatusCode};
-use std::{fmt, error::Error};
 
 #[derive(Debug)]
 pub enum AppError {
@@ -24,23 +24,17 @@ impl warp::reject::Reject for AppError {}
 impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            AppError::BeatmapNotFound(id) =>
-                write!(f, "Beatmap not found: {}", id),
+            AppError::BeatmapNotFound(id) => write!(f, "Beatmap not found: {}", id),
 
-            AppError::InvalidGameMode(mode) =>
-                write!(f, "Invalid game mode: {}", mode),
+            AppError::InvalidGameMode(mode) => write!(f, "Invalid game mode: {}", mode),
 
-            AppError::InvalidAccuracy(acc) =>
-                write!(f, "Invalid accuracy: {}", acc),
+            AppError::InvalidAccuracy(acc) => write!(f, "Invalid accuracy: {}", acc),
 
-            AppError::ExternalService(msg) =>
-                write!(f, "External service error: {}", msg),
+            AppError::ExternalService(msg) => write!(f, "External service error: {}", msg),
 
-            AppError::Internal(msg) =>
-                write!(f, "Internal error: {}", msg),
+            AppError::Internal(msg) => write!(f, "Internal error: {}", msg),
 
-            AppError::BadRequest(msg) =>
-                write!(f, "Bad request: {}", msg),
+            AppError::BadRequest(msg) => write!(f, "Bad request: {}", msg),
         }
     }
 }

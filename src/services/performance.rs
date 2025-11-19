@@ -6,30 +6,33 @@ use crate::{
 };
 use refx_pp::model::mode::GameMode;
 
-use std::{collections::HashMap, hash::{Hash, Hasher}, sync::Arc};
+use std::{
+    collections::HashMap,
+    hash::{Hash, Hasher},
+    sync::Arc,
+};
 use tokio::sync::RwLock;
 
 /// unique.
 unsafe fn hash(request: &CalculateRequest) -> u64 {
     use std::collections::hash_map::DefaultHasher;
-    
+
     let mut hasher = DefaultHasher::new();
-    
+
     request.beatmap_id.hash(&mut hasher);
     request.mode.hash(&mut hasher);
     request.mods.hash(&mut hasher);
     request.lazer.hash(&mut hasher);
-    
+
     // hash accuracy as bits to avoid float comparison issues
     #[allow(unnecessary_transmutes)]
-    std::mem::transmute::<f64, u64>(request.accuracy)
-        .hash(&mut hasher);
-    
+    std::mem::transmute::<f64, u64>(request.accuracy).hash(&mut hasher);
+
     request.max_combo.hash(&mut hasher);
     request.miss_count.hash(&mut hasher);
     request.passed_objects.hash(&mut hasher);
     request.legacy_score.hash(&mut hasher);
-    
+
     hasher.finish()
 }
 
@@ -53,9 +56,7 @@ impl PerformanceService {
     ) -> Result<PerformanceResult, AppError> {
         request.validate()?;
 
-        let key = unsafe { 
-            hash(&request)
-        };
+        let key = unsafe { hash(&request) };
 
         {
             let c = self.cache.read().await;

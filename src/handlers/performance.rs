@@ -21,8 +21,6 @@ pub async fn calculate_handler(
                     .into_response(),
             )
         },
-        Err(err) => {
-            Ok(err.to_response().into_response())
-        },
+        Err(err) => Ok(err.to_response().into_response()),
     }
 }

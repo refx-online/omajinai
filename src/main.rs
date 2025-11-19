@@ -1,8 +1,6 @@
 use anyhow::Result;
 
-use omajinai::{
-    config::Config, context::Context, routes::create_routes,
-};
+use omajinai::{config::Config, context::Context, routes::create_routes};
 
 use std::sync::Arc;
 
