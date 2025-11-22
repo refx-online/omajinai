@@ -9,8 +9,8 @@ pub async fn health_handler(_context: Arc<Context>) -> Result<impl Reply, Infall
     let uptime = _context.start_time.elapsed().unwrap().as_secs();
 
     let response = ApiResponse::success(HealthResponse {
-        status: "Im good".to_string(),
-        version: env!("CARGO_PKG_VERSION").to_string(),
+        status: "ok".into(),
+        version: env!("CARGO_PKG_VERSION").into(),
         uptime_seconds: uptime,
     });
 

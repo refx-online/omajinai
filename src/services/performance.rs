@@ -22,13 +22,7 @@ impl PerformanceService {
     ) -> Result<PerformanceResult, AppError> {
         request.validate()?;
 
-        let beatmap = if let Some(beatmap_id) = request.beatmap_id {
-            beatmap_service.get_beatmap(beatmap_id).await?
-        } else {
-            return Err(AppError::BadRequest(
-                "Beatmap_id must be provided".to_string(),
-            ));
-        };
+        let beatmap = beatmap_service.get_beatmap(request.beatmap_id).await?;
 
         let mode = match request.mode {
             0 => GameMode::Osu,
@@ -56,6 +50,10 @@ impl PerformanceService {
             calculator = calculator.passed_objects(passed);
         }
 
+        if let Some(legacy_score) = request.legacy_score {
+            calculator = calculator.legacy_total_score(legacy_score);
+        }
+
         if let Some(mods_str) = &request.mods {
             let mods = parse_mods(mods_str, mode).unwrap_or_default();
             calculator = match mods {
@@ -69,10 +67,6 @@ impl PerformanceService {
                 GameMods::Intermode(intermode_mods) => calculator.mods(intermode_mods),
                 GameMods::Lazer(lazer_mods) => calculator.mods(lazer_mods),
             };
-        }
-
-        if let Some(legacy_score) = request.legacy_score {
-            calculator = calculator.legacy_total_score(legacy_score);
         }
 
         let result = calculator.calculate();

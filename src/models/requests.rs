@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CalculateRequest {
-    pub beatmap_id: Option<i32>,
+    pub beatmap_id: i32,
     pub mode: u32,
     pub mods: Option<String>,
     pub max_combo: Option<u32>,
@@ -15,23 +15,13 @@ pub struct CalculateRequest {
 
 impl CalculateRequest {
     pub fn validate(&self) -> Result<(), crate::error::AppError> {
-        if self.beatmap_id.is_none() {
-            return Err(crate::error::AppError::BadRequest(
-                "Beatmap_id must be provided".to_string(),
-            ));
-        }
-
-        if self.mode > 3 {
-            return Err(crate::error::AppError::InvalidGameMode(self.mode));
-        }
-
         if self.accuracy < 0.0 || self.accuracy > 100.0 {
             return Err(crate::error::AppError::InvalidAccuracy(self.accuracy));
         }
 
         if self.legacy_score.is_some() && self.lazer.is_some() {
             return Err(crate::error::AppError::BadRequest(
-                "Legacy score cannot be used with lazer calculations.".to_string(),
+                "Legacy score cannot be used with lazer calculations.".into(),
             ));
         }
 
