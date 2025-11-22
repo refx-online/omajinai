@@ -57,13 +57,7 @@ impl PerformanceService {
         if let Some(mods_str) = &request.mods {
             let mods = parse_mods(mods_str, mode).unwrap_or_default();
             calculator = match mods {
-                GameMods::Legacy(legacy_mods) => {
-                    if request.lazer.unwrap_or(false) {
-                        calculator.mods(legacy_mods)
-                    } else {
-                        calculator.mods(legacy_mods.bits())
-                    }
-                },
+                GameMods::Legacy(legacy_mods) => calculator.mods(legacy_mods),
                 GameMods::Intermode(intermode_mods) => calculator.mods(intermode_mods),
                 GameMods::Lazer(lazer_mods) => calculator.mods(lazer_mods),
             };
