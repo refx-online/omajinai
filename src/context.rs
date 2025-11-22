@@ -24,7 +24,7 @@ impl Context {
 
         let beatmap_service = Arc::new(BeatmapService::new(http_client.clone(), config.clone()));
 
-        let performance_service = Arc::new(PerformanceService::new(config.cache_size).await);
+        let performance_service = Arc::new(PerformanceService::new().await);
 
         Ok(Self {
             config,
