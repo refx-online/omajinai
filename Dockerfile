@@ -1,28 +1,29 @@
-FROM rustlang/rust:nightly AS builder
+FROM rustlang/rust:nightly AS chef
+RUN cargo install cargo-chef
+WORKDIR /app
+
+FROM chef AS planner
+COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
+
+FROM chef AS builder
 
 ENV RUSTFLAGS="-C target-cpu=native -C link-arg=-s"
 
-WORKDIR /app
-
-COPY Cargo.toml Cargo.lock ./
-
-# to build deps first
-RUN mkdir -p src && echo "fn main() {}" > src/main.rs
+COPY --from=planner /app/recipe.json recipe.json
 
 # build da dependencies with registry cache
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/app/target \
-    cargo build --release
+    cargo chef cook --release --recipe-path recipe.json
 
-RUN rm -rf src/
-
-COPY src/ ./src/
+COPY . .
 
 # "build" da actual application with cache mounts
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/app/target \
     cargo build --release --locked && \
-    cp /app/target/release/omajinai /omajinai
+    cp target/release/omajinai /omajinai
 
 FROM gcr.io/distroless/cc-debian12
 
