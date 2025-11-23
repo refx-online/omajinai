@@ -1,5 +1,7 @@
 FROM rustlang/rust:nightly AS builder
 
+ENV RUSTFLAGS="-C target-cpu=native -C link-arg=-s"
+
 WORKDIR /app
 
 COPY Cargo.toml Cargo.lock ./
@@ -18,12 +20,9 @@ COPY src/ ./src/
 
 # "build" da actual application with cache mounts
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/app/target <<EOF
-  set -e
-  touch /app/src/main.rs
-  RUSTFLAGS="-C target-cpu=native -C link-arg=-s" cargo build --release --locked
-  cp /app/target/release/omajinai /omajinai
-EOF
+    --mount=type=cache,target=/app/target \
+    cargo build --release --locked && \
+    cp /app/target/release/omajinai /omajinai
 
 FROM gcr.io/distroless/cc-debian12
 
