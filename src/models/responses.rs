@@ -1,16 +1,19 @@
+use refx_pp::any::PerformanceAttributes;
 use serde::Serialize;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct PerformanceResult {
     pub pp: f64,
+    pub hypothetical_pp: f64,
     pub stars: f64,
     pub max_combo: u32,
 }
 
 impl PerformanceResult {
-    pub fn from_attributes(attributes: refx_pp::any::PerformanceAttributes) -> Self {
+    pub fn from_attributes(attributes: PerformanceAttributes, hypothetical_pp: f64) -> Self {
         Self {
             pp: attributes.pp(),
+            hypothetical_pp,
             stars: attributes.stars(),
             max_combo: attributes.max_combo(),
         }

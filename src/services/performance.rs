@@ -4,6 +4,7 @@ use crate::{
     services::beatmap::BeatmapService,
     utils::mods::{GameMods, parse_mods},
 };
+use refx_pp::Performance;
 use refx_pp::model::mode::GameMode;
 
 use std::sync::Arc;
@@ -37,6 +38,7 @@ impl PerformanceService {
             .mode_or_ignore(mode)
             .lazer(request.lazer.unwrap_or(false))
             .accuracy(request.accuracy);
+        let hypothetical_calculator = calculator.clone();
 
         if let Some(combo) = request.max_combo {
             calculator = calculator.combo(combo);
@@ -64,7 +66,9 @@ impl PerformanceService {
         }
 
         let result = calculator.calculate();
-        let perf_result = PerformanceResult::from_attributes(result);
+        let hypothetical_result = Self::with_misses(hypothetical_calculator, 0).calculate();
+
+        let perf_result = PerformanceResult::from_attributes(result, hypothetical_result.pp());
 
         println!(
             "Calculated performance: {:.2}pp, {:.2}*",
@@ -72,5 +76,9 @@ impl PerformanceService {
         );
 
         Ok(perf_result)
+    }
+
+    fn with_misses(calculator: Performance<'_>, misses: u32) -> Performance<'_> {
+        calculator.misses(misses)
     }
 }
