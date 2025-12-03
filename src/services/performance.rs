@@ -38,7 +38,6 @@ impl PerformanceService {
             .mode_or_ignore(mode)
             .lazer(request.lazer.unwrap_or(false))
             .accuracy(request.accuracy);
-        let hypothetical_calculator = calculator.clone();
 
         if let Some(combo) = request.max_combo {
             calculator = calculator.combo(combo);
@@ -64,6 +63,8 @@ impl PerformanceService {
                 GameMods::Lazer(lazer_mods) => calculator.mods(lazer_mods),
             };
         }
+        // NOTE: we clone here before it gets consumed
+        let hypothetical_calculator = calculator.clone();
 
         let result = calculator.calculate();
         let hypothetical_result = Self::with_misses(hypothetical_calculator, 0).calculate();
