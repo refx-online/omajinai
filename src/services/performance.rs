@@ -55,6 +55,12 @@ impl PerformanceService {
             calculator = calculator.legacy_total_score(legacy_score);
         }
 
+        if let Some(clock_rate) = request.clock_rate {
+            if clock_rate >= -1.0 {
+                calculator = calculator.clock_rate(clock_rate);
+            }
+        }
+
         if let Some(mods_str) = &request.mods {
             let mods = parse_mods(mods_str, mode).unwrap_or_default();
             calculator = match mods {

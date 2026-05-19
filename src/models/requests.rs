@@ -11,6 +11,7 @@ pub struct CalculateRequest {
     pub passed_objects: Option<u32>,
     pub legacy_score: Option<i64>,
     pub lazer: Option<bool>,
+    pub clock_rate: Option<f64>,
 }
 
 impl CalculateRequest {
