@@ -56,7 +56,7 @@ impl PerformanceService {
         }
 
         if let Some(clock_rate) = request.clock_rate {
-            if clock_rate >= -1.0 {
+            if clock_rate >= -1.0 && clock_rate != 0.0 && clock_rate != 1.5 {
                 calculator = calculator.clock_rate(clock_rate);
             }
         }
