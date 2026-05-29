@@ -6,6 +6,7 @@ pub struct Config {
     pub port: u16,
     pub beatmaps_path: String,
     pub cache_size: usize,
+    pub beatmap_service_url: Option<String>,
 }
 
 impl Default for Config {
@@ -14,6 +15,7 @@ impl Default for Config {
             port: 3030,
             beatmaps_path: ".data/osu/".into(),
             cache_size: 1000,
+            beatmap_service_url: None,
         }
     }
 }
@@ -32,6 +34,10 @@ impl Config {
 
         if let Ok(cache_size) = std::env::var("CACHE_SIZE") {
             config.cache_size = cache_size.parse()?;
+        }
+
+        if let Ok(mirror) = std::env::var("BEATMAP_SERVICE_URL") {
+            config.beatmap_service_url = Some(mirror);
         }
 
         Ok(config)

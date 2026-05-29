@@ -11,3 +11,4 @@ serde_json = "1.0"
 anyhow = "1.0"
 refx-pp = { git = "https://github.com/refx-online/refx-pp-rs", rev = "62b0c534068f8d9a9cc16521e85e3f69256e6f7a", features = ["sync"] }
 rosu-mods = { version = "0.3.0", default-features = false, features = ["serde"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
