@@ -47,6 +47,26 @@ impl PerformanceService {
             calculator = calculator.misses(misses);
         }
 
+        if let Some(n300) = request.n300 {
+            calculator = calculator.n300(n300);
+        }
+
+        if let Some(n100) = request.n100 {
+            calculator = calculator.n100(n100);
+        }
+
+        if let Some(n50) = request.n50 {
+            calculator = calculator.n50(n50);
+        }
+
+        if let Some(ngeki) = request.ngeki {
+            calculator = calculator.n_geki(ngeki);
+        }
+
+        if let Some(nkatu) = request.nkatu {
+            calculator = calculator.n_katu(nkatu);
+        }
+
         if let Some(passed) = request.passed_objects {
             calculator = calculator.passed_objects(passed);
         }
