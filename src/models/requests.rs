@@ -16,8 +16,16 @@ pub struct CalculateRequest {
 
 impl CalculateRequest {
     pub fn validate(&self) -> Result<(), crate::error::AppError> {
-        if self.accuracy < 0.0 || self.accuracy > 100.0 {
+        // NOTE: NaN comparisons are all false, so check it explicitly —
+        // otherwise {"accuracy": NaN} sails through as valid.
+        if self.accuracy.is_nan() || self.accuracy < 0.0 || self.accuracy > 100.0 {
             return Err(crate::error::AppError::InvalidAccuracy(self.accuracy));
+        }
+
+        if self.beatmap_id <= 0 {
+            return Err(crate::error::AppError::BadRequest(
+                "Beatmap id must be a positive integer.".into(),
+            ));
         }
 
         if self.legacy_score.is_some() && self.lazer.unwrap_or(false) {

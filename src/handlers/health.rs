@@ -6,7 +6,9 @@ use std::{convert::Infallible, sync::Arc};
 use warp::Reply;
 
 pub async fn health_handler(_context: Arc<Context>) -> Result<impl Reply, Infallible> {
-    let uptime = _context.start_time.elapsed().unwrap().as_secs();
+    // NOTE: elapsed() errs on clock step (NTP) — report zero uptime instead
+    // of panicking the health endpoint.
+    let uptime = _context.start_time.elapsed().unwrap_or_default().as_secs();
 
     let response = ApiResponse::success(HealthResponse {
         status: "ok".into(),
